@@ -60,3 +60,6 @@ agent = Agent(
     ],
 )
 ```
+
+
+[Tiny Agents: an MCP-powered agent in 50 lines of code ](https://huggingface.co/blog/tiny-agents)
