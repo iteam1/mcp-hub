@@ -1,6 +1,7 @@
 # MCP Hub
 
 ## Acknowledgments
+- [MCP course](https://huggingface.co/learn/mcp-course)
 - [MCP Documentation](https://www.claudemcp.com/docs/introduction)
 - [Claude's MCP documentation](https://docs.anthropic.com/en/docs/claude-code/overview)
 - [MCP Servers](https://mcp.so/)
