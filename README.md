@@ -12,7 +12,7 @@ A centralized repository for Model Context Protocol (MCP) projects. This hub aim
 
 ### GitHub Repositories
 - [Model Context Protocol](https://github.com/modelcontextprotocol/modelcontextprotocol) - Official MCP specification and reference implementation
-- [MCP Specification](https://github.com/modelcontextprotocol/modelcontextprotocol)
+- [MCP Specification](https://github.com/modelcontextprotocol/modelcontextprotocol) - MCP specification and reference implementation
 - [Python SDK](https://github.com/modelcontextprotocol/python-sdk) - Official Python SDK for MCP integration
 - [MCP Inspector](https://github.com/modelcontextprotocol/inspector) - Tool for inspecting and debugging MCP servers
 - [MCP Servers](https://github.com/modelcontextprotocol/servers) - Collection of MCP server implementations
