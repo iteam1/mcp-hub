@@ -7,7 +7,7 @@ from mcp.shared._httpx_utils import create_mcp_http_client
 
 async def fetch_website(
     url: str,
-) -> list[types.ContentBlock]:
+    ) -> list[types.ContentBlock]:
     headers = {
         "User-Agent": "MCP Test Server (github.com/modelcontextprotocol/python-sdk)"
     }
@@ -25,6 +25,7 @@ async def fetch_website(
     default="stdio",
     help="Transport type",
 )
+
 def main(port: int, transport: str) -> int:
     app = Server("mcp-website-fetcher")
 
