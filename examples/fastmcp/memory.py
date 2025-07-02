@@ -62,7 +62,7 @@ async def do_ai[T](
     system_prompt: str,
     result_type: type[T] | Annotated,
     deps=None,
-) -> T:
+    ) -> T:
     agent = Agent(
         DEFAULT_LLM_MODEL,
         system_prompt=system_prompt,
@@ -272,7 +272,7 @@ async def display_memory_tree(deps: Deps) -> str:
 @mcp.tool()
 async def remember(
     contents: list[str] = Field(description="List of observations or memories to store"),
-):
+    ):
     deps = Deps(openai=AsyncOpenAI(), pool=await get_db_pool())
     try:
         return "\n".join(await asyncio.gather(*[add_memory(content, deps) for content in contents]))
