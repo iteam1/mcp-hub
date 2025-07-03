@@ -12,7 +12,7 @@
 
 Use `npx @modelcontextprotocol/inspector` to start the inspector.
 
-- STDIO: The inspector will start the MCP server by command `uv` with the arguments `run mcp_simple_tool` and connect to it. For example, `uv run mcp_simple_tool` or `uv run mcp_simple_tool/server.py`.
+- STDIO: The inspector will start the MCP server by command `uv` with the arguments `run mcp_simple_tool` and connect to it. For example, `uv run mcp_simple_tool` or `run --with mcp --with Pillow --with pyautogui mcp run examples/fastmcp/screenshot.py`.
 
 - SSE: We have to start the MCP server by command `uv run mcp_simple_tool --port 8000 --transport sse` before starting the inspector. The inspector will connect to the MCP server at `http://localhost:8000/sse`.
 
