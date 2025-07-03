@@ -39,3 +39,4 @@ To begin working with MCP:
 2. Take the [MCP course](https://huggingface.co/learn/mcp-course) to understand implementation details
 3. Explore the [Python SDK](https://github.com/modelcontextprotocol/python-sdk) for integration examples
 4. Browse available [MCP servers](https://mcp.so/) for specific capabilities
+
