@@ -1,5 +1,25 @@
 # MCP Cheatsheet
 
+## Components
+
+- **Proxy server (MCPP)**: Your web browser, for security reasons, cannot directly start or communicate with a local program on your computer, like your Python server using stdio. Browsers are built to communicate over web protocols like HTTP. The proxy server bridges this gap. The Inspector UI (in your browser) sends requests to the Proxy Server (listening on `127.0.0.1:6277`). The Proxy Server then takes those requests and forwards them to your MCP Server using the correct transport method (like stdio, SSE, streamable HTTP).
+
+- **Inspector (MCPI)**: The Inspector UI on `127.0.0.1:6274` sends requests to the Proxy Server.
+
+- **MCP server**: The MCP server is the program that handles the requests from the Proxy Server and performs the necessary actions based on the requests.
+
+## Transports
+
+Use `npx @modelcontextprotocol/inspector` to start the inspector.
+
+- STDIO: The inspector will start the MCP server by command `uv` with the arguments `run mcp_simple_tool` and connect to it. For example, `uv run mcp_simple_tool` or `uv run mcp_simple_tool/server.py`.
+
+- SSE: We have to start the MCP server by command `uv run mcp_simple_tool --port 8000 --transport sse` before starting the inspector. The inspector will connect to the MCP server at `http://localhost:8000/sse`.
+
+When run command `uv run`, `uv` will detect `pyproject.toml` and `uv.lock` to create the virtual environment and install dependencies before starting the MCP server. Without a token, any other application or even a malicious script in your browser could potentially connect to the inspector and interact with your MCP server. The session token ensures that only you (by using the special link provided) can communicate with the inspector's proxy. Any request made without the correct token will be rejected.
+
+The session token is a security feature for the MCP Inspector.
+
 ## Resources
 
 Read-only data sources that provide context without significant computation.
