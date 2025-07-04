@@ -24,26 +24,30 @@ logger = logging.getLogger(__name__)
     "--log-level",
     default="INFO",
     help="Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
-)
+    )
 @click.option(
     "--json-response",
     is_flag=True,
     default=False,
     help="Enable JSON responses instead of SSE streams",
-)
+    )
+
 def main(
     port: int,
     log_level: str,
     json_response: bool,
-) -> int:
+    ) -> int:
+
     # Configure logging
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
+    # Create the server
     app = Server("mcp-streamable-http-demo")
 
+    # Define the call_tool handler
     @app.call_tool()
     async def call_tool(name: str, arguments: dict) -> list[types.ContentBlock]:
         ctx = app.request_context
@@ -138,7 +142,7 @@ def main(
     # ASGI handler for streamable HTTP connections
     async def handle_streamable_http(
         scope: Scope, receive: Receive, send: Send
-    ) -> None:
+        ) -> None:
         await session_manager.handle_request(scope, receive, send)
 
     @contextlib.asynccontextmanager

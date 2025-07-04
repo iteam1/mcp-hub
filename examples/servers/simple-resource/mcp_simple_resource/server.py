@@ -19,7 +19,7 @@ SAMPLE_RESOURCES = {
     },
 }
 
-
+# Command-line interface
 @click.command()
 @click.option("--port", default=8000, help="Port to listen on for SSE")
 @click.option(
@@ -28,9 +28,13 @@ SAMPLE_RESOURCES = {
     default="stdio",
     help="Transport type",
 )
+
 def main(port: int, transport: str) -> int:
+
+    # Create the server
     app = Server("mcp-simple-resource")
 
+    # Define the list_resources handler
     @app.list_resources()
     async def list_resources() -> list[types.Resource]:
         return [
@@ -44,6 +48,7 @@ def main(port: int, transport: str) -> int:
             for name in SAMPLE_RESOURCES.keys()
         ]
 
+    # Define the read_resource handler
     @app.read_resource()
     async def read_resource(uri: AnyUrl) -> str | bytes:
         if uri.path is None:
@@ -55,7 +60,9 @@ def main(port: int, transport: str) -> int:
 
         return SAMPLE_RESOURCES[name]["content"]
 
+    # Run the server
     if transport == "sse":
+        # Create the SSE server
         from mcp.server.sse import SseServerTransport
         from starlette.applications import Starlette
         from starlette.responses import Response
@@ -84,6 +91,7 @@ def main(port: int, transport: str) -> int:
 
         uvicorn.run(starlette_app, host="127.0.0.1", port=port)
     else:
+        # Run the server using stdio transport
         from mcp.server.stdio import stdio_server
 
         async def arun():

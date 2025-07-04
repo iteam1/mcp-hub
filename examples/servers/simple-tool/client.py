@@ -4,9 +4,11 @@ from mcp.client.stdio import StdioServerParameters, stdio_client
 
 
 async def main():
+    # Start the server as a subprocess
     async with stdio_client(
         StdioServerParameters(command="uv", args=["run", "mcp-simple-tool"])
     ) as (read, write):
+        # Create a client session
         async with ClientSession(read, write) as session:
             await session.initialize()
 

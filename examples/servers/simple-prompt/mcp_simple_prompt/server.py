@@ -3,11 +3,20 @@ import click
 import mcp.types as types
 from mcp.server.lowlevel import Server
 
-
+# Function to create the messages for the prompt
 def create_messages(
     context: str | None = None, topic: str | None = None
-) -> list[types.PromptMessage]:
-    """Create the messages for the prompt."""
+    ) -> list[types.PromptMessage]:
+    """
+    Create the messages for the prompt.
+
+    Args:
+        context: Additional context to consider
+        topic: Specific topic to focus on
+    
+    Returns:
+        list[types.PromptMessage]: The messages for the prompt
+    """
     messages = []
 
     # Add context if provided
@@ -36,7 +45,7 @@ def create_messages(
 
     return messages
 
-
+# Command-line interface
 @click.command()
 @click.option("--port", default=8000, help="Port to listen on for SSE")
 @click.option(
@@ -46,6 +55,8 @@ def create_messages(
     help="Transport type",
 )
 def main(port: int, transport: str) -> int:
+
+    # Create the server
     app = Server("mcp-simple-prompt")
 
     @app.list_prompts()
@@ -74,7 +85,7 @@ def main(port: int, transport: str) -> int:
     @app.get_prompt()
     async def get_prompt(
         name: str, arguments: dict[str, str] | None = None
-    ) -> types.GetPromptResult:
+        ) -> types.GetPromptResult:
         if name != "simple":
             raise ValueError(f"Unknown prompt: {name}")
 
@@ -88,7 +99,9 @@ def main(port: int, transport: str) -> int:
             description="A simple prompt with optional context and topic arguments",
         )
 
+    # Run the server
     if transport == "sse":
+        # Create the SSE server
         from mcp.server.sse import SseServerTransport
         from starlette.applications import Starlette
         from starlette.responses import Response
@@ -117,6 +130,7 @@ def main(port: int, transport: str) -> int:
 
         uvicorn.run(starlette_app, host="127.0.0.1", port=port)
     else:
+        # Create the stdio server
         from mcp.server.stdio import stdio_server
 
         async def arun():

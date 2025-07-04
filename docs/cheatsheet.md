@@ -61,6 +61,90 @@ Here is a comparison between the two transports:
 
 In summary, a `Route` establishes the channel, and a `Mount` handles the messages sent through that channel.
 
+### Compare SSE and Streamable HTTP
+
+MCP supports two transport mechanisms for HTTP-based communication:
+
+#### SSE (Server-Sent Events) - Legacy/Deprecated
+
+The older transport mechanism using separate endpoints for connection and messages.
+
+```python
+# Import the SSE transport
+from mcp.server.sse import SseServerTransport
+
+# Initialize the SSE transport with a message endpoint path
+sse = SseServerTransport("/messages/")
+
+# Handle SSE connection requests
+async def handle_sse(request):
+    async with sse.connect_sse(
+        request.scope, request.receive, request._send
+    ) as streams:
+        await app.run(
+            streams[0], streams[1], app.create_initialization_options()
+        )
+    return Response()
+
+# Set up routes for SSE
+starlette_app = Starlette(
+    debug=True,
+    routes=[
+        # Route for establishing the SSE connection
+        Route("/sse", endpoint=handle_sse, methods=["GET"]),
+        # Mount point for handling incoming POST messages
+        Mount("/messages/", app=sse.handle_post_message),
+    ],
+)
+```
+
+#### StreamableHTTP - Modern Recommended Approach
+
+The newer transport with better architecture, single endpoint, and resumability support.
+
+```python
+# Import the StreamableHTTP manager
+from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
+
+# Optional: Create an event store for resumability
+from .event_store import InMemoryEventStore
+event_store = InMemoryEventStore()
+
+# Create the session manager
+session_manager = StreamableHTTPSessionManager(
+    app=app,
+    event_store=event_store,  # Enable resumability (optional)
+    json_response=False,      # Use SSE format (or True for JSON)
+)
+
+# ASGI handler for streamable HTTP connections
+async def handle_streamable_http(scope, receive, send):
+    await session_manager.handle_request(scope, receive, send)
+
+# Set up lifespan for proper resource management
+@contextlib.asynccontextmanager
+async def lifespan(app):
+    async with session_manager.run():
+        yield
+
+# Set up a single mount point for all MCP operations
+starlette_app = Starlette(
+    debug=True,
+    routes=[
+        Mount("/mcp", app=handle_streamable_http),
+    ],
+    lifespan=lifespan,
+)
+```
+
+**Key Differences:**
+
+- **Architecture**: StreamableHTTP uses a single endpoint vs. SSE's separate endpoints
+- **Resumability**: StreamableHTTP supports connection resumption with event stores
+- **Flexibility**: StreamableHTTP can use either SSE or JSON response formats
+- **Lifecycle**: StreamableHTTP has proper resource management via lifespan
+- **Status**: SSE is deprecated, StreamableHTTP is the recommended approach
+
 ## Resources
 
 Read-only data sources that provide context without significant computation.
