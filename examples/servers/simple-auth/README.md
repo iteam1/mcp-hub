@@ -141,3 +141,51 @@ curl -X POST http://localhost:9000/introspect \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "token=your_access_token"
 ```
+
+## Code Structure
+
+The `mcp_simple_auth` package contains the following files:
+
+### `__init__.py`
+A simple module docstring identifying this as a "Simple MCP server with GitHub OAuth authentication."
+
+### `__main__.py`
+Main entry point for the MCP server that imports and calls the main function from `server.py`.
+
+### `auth_server.py`
+Implements the standalone Authorization Server (AS) following RFC 9728:
+- Creates an OAuth 2.0 authorization server with GitHub integration
+- Handles client registration, authorization flows, and token issuance
+- Provides token introspection endpoint for Resource Servers
+- Includes a GitHub user info proxy endpoint
+- Implements the `GitHubProxyAuthProvider` class that maps MCP tokens to GitHub tokens
+
+### `github_oauth_provider.py`
+Shared GitHub OAuth provider used by both the standalone and legacy servers:
+- Manages GitHub OAuth authentication flow
+- Handles token exchange between GitHub and MCP
+- Stores token mappings and state
+- Provides methods to access GitHub API using stored tokens
+- Implements the `GitHubOAuthSettings` class for configuration
+
+### `legacy_as_server.py`
+Implements a legacy combined Authorization Server + Resource Server for backwards compatibility:
+- Follows the old specification where MCP servers could act as both AS and RS
+- Provides OAuth endpoints directly on the MCP server
+- Validates tokens internally without introspection
+- Demonstrates how older MCP implementations worked before RFC 9728
+
+### `server.py`
+Implements the Resource Server (RS) that validates tokens via AS introspection:
+- Creates an MCP server that acts solely as a Resource Server
+- Validates tokens by calling the Authorization Server's introspection endpoint
+- Provides RFC 9728 Protected Resource Metadata
+- Implements MCP tools that require authentication
+- Demonstrates proper AS/RS separation per RFC 9728
+
+### `token_verifier.py`
+Implements token verification using OAuth 2.0 Token Introspection (RFC 7662):
+- Provides the `IntrospectionTokenVerifier` class that validates tokens via AS introspection
+- Supports RFC 8707 resource validation to ensure tokens were issued for this specific resource
+- Handles token validation and extraction of claims
+- Demonstrates secure token verification practices
