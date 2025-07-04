@@ -18,6 +18,54 @@ The MCP protocol defines a structured sequence of stages:
 
 * The **Client** confirms that initialization is complete via a notification message.
 
+## 📝 Message Types
+
+MCP has these main types of messages:
+
+### Requests
+
+Requests expect a response from the other side:
+
+```typescript
+interface Request {
+  method: string;
+  params?: { ... };
+}
+```
+
+### Results
+
+Results are successful responses to requests:
+
+```typescript
+interface Result {
+  [key: string]: unknown;
+}
+```
+
+### Errors
+
+Errors indicate that a request failed:
+
+```typescript
+interface Error {
+  code: number;
+  message: string;
+  data?: unknown;
+}
+```
+
+### Notifications
+
+Notifications are one-way messages that don't expect a response:
+
+```typescript
+interface Notification {
+  method: string;
+  params?: { ... };
+}
+```
+
 ## 🔹 Discovery
 
 1. The **Client** requests a list of available capabilities.
@@ -54,9 +102,83 @@ The MCP protocol defines a structured sequence of stages:
 💻 → exit     → 🌐  
 ```
 
-* The interaction lifecycle concludes with the **Client**’s `exit` message.
+* The interaction lifecycle concludes with the **Client**'s `exit` message.
 
-Got it! Here's a clean, well-formatted version of your content with clear headings, a table, and bullet points for clarity:
+## 📋 Best Practices
+
+### Transport Selection
+
+#### Local Communication
+- Use stdio transport for local processes
+- Efficient for same-machine communication
+- Simple process management
+
+#### Remote Communication
+- Use Streamable HTTP for scenarios requiring HTTP compatibility
+- Consider security implications including authentication and authorization
+
+### Message Handling
+
+#### Request Processing
+- Validate inputs thoroughly
+- Use type-safe schemas
+- Handle errors gracefully
+- Implement timeouts
+
+#### Progress Reporting
+- Use progress tokens for long operations
+- Report progress incrementally
+- Include total progress when known
+
+#### Error Management
+- Use appropriate error codes
+- Include helpful error messages
+- Clean up resources on errors
+
+### Security Considerations
+
+#### Transport Security
+- Use TLS for remote connections
+- Validate connection origins
+- Implement authentication when needed
+
+#### Message Validation
+- Validate all incoming messages
+- Sanitize inputs
+- Check message size limits
+- Verify JSON-RPC format
+
+#### Resource Protection
+- Implement access controls
+- Validate resource paths
+- Monitor resource usage
+- Rate limit requests
+
+#### Error Handling
+- Don't leak sensitive information
+- Log security-relevant errors
+- Implement proper cleanup
+- Handle DoS scenarios
+
+### Debugging and Monitoring
+
+#### Logging
+- Log protocol events
+- Track message flow
+- Monitor performance
+- Record errors
+
+#### Diagnostics
+- Implement health checks
+- Monitor connection state
+- Track resource usage
+- Profile performance
+
+#### Testing
+- Test different transports
+- Verify error handling
+- Check edge cases
+- Load test servers
 
 ---
 
