@@ -1,6 +1,6 @@
 # MCP Cheatsheet
 
-## Components
+## [Components](https://modelcontextprotocol.io/docs/concepts/architecture)
 
 - **Proxy server (MCPP)**: Your web browser, for security reasons, cannot directly start or communicate with a local program on your computer, like your Python server using stdio. Browsers are built to communicate over web protocols like HTTP. The proxy server bridges this gap. The Inspector UI (in your browser) sends requests to the Proxy Server (listening on `127.0.0.1:6277`). The Proxy Server then takes those requests and forwards them to your MCP Server using the correct transport method (like stdio, SSE, streamable HTTP).
 
@@ -8,7 +8,7 @@
 
 - **MCP server**: The MCP server is the program that handles the requests from the Proxy Server and performs the necessary actions based on the requests.
 
-## Transports
+## [Transports](https://modelcontextprotocol.io/docs/concepts/transports)
 
 ### Abstraction
 
@@ -145,7 +145,7 @@ starlette_app = Starlette(
 - **Lifecycle**: StreamableHTTP has proper resource management via lifespan
 - **Status**: SSE is deprecated, StreamableHTTP is the recommended approach
 
-## Resources
+## [Resources](https://modelcontextprotocol.io/docs/concepts/resources)
 
 Read-only data sources that provide context without significant computation.
 
@@ -251,7 +251,7 @@ def take_screenshot() -> Image:
 ```
 
 
-## Tools
+## [Tools](https://modelcontextprotocol.io/docs/concepts/tools)
 
 Executable functions that the AI model can invoke to perform actions or retrieve computed data. Typically relating to the use case of the application.
 
@@ -264,7 +264,7 @@ def echo_tool(text: str) -> str:
     return text
 ```
 
-## Prompts
+## [Prompts](https://modelcontextprotocol.io/docs/concepts/prompts)
 
 Pre-defined templates or workflows that guide interactions between users, AI models, and the available capabilities.
 
@@ -278,6 +278,6 @@ def echo_prompt(text: str) -> str:
 ```
 
 
-## Sampling
+## [Sampling](https://modelcontextprotocol.io/docs/concepts/sampling)
 
 Server-initiated requests for the Client/Host to perform LLM interactions, enabling recursive actions where the LLM can review generated content and make further decisions.
